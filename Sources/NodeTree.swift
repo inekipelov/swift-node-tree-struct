@@ -176,7 +176,7 @@ extension NodeTree: Identifiable where V: Identifiable {
         if self.id == id {
             return self
         }
-        return children.map { $0.findNode(id: id) }.compactMap(\.self).first
+        return children.map { $0.findNode(id: id) }.compactMap { $0 }.first
     }
     public mutating func append(_ child: NodeTree<V>, to id: V.ID) {
         let isContained = findNode(id: id) != nil
