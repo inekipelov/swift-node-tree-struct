@@ -1,6 +1,6 @@
-    //
-    //  NodeTree.swift
-    //
+//
+//  NodeTree.swift
+//
 
 import Foundation
 import CodableAdvance
@@ -26,7 +26,7 @@ public struct NodeTree<V> {
     }
     
     
-        // MARK: - Dynamic Member Lookup
+    // MARK: - Dynamic Member Lookup
     public subscript<T>(dynamicMember keyPath: KeyPath<V, T>) -> T {
         self.value[keyPath: keyPath]
     }
@@ -36,14 +36,14 @@ public struct NodeTree<V> {
     }
 }
 
-    // MARK: - Traversal
+// MARK: - Traversal
 public extension NodeTree {
     enum TraversalOrder {
         case depthFirst
         case breadthFirst
     }
     
-        /// Traverses the tree, allowing early exit if `visit` returns false.
+    /// Traverses the tree, allowing early exit if `visit` returns false.
     @discardableResult
     func traverse(order: TraversalOrder = .depthFirst, _ visit: (V) throws -> Bool) rethrows -> Bool {
         switch order {
@@ -54,7 +54,7 @@ public extension NodeTree {
         }
     }
     
-        // Finds the first value matching the predicate.
+    /// Finds the first value matching the predicate.
     func findFirst(order: TraversalOrder = .depthFirst, where predicate: (V) throws -> Bool) rethrows -> V? {
         var result: V?
         try traverse(order: order) { value in
@@ -67,7 +67,7 @@ public extension NodeTree {
         return result
     }
     
-        /// Finds all values matching the predicate.
+    /// Finds all values matching the predicate.
     func findAll(order: TraversalOrder = .depthFirst ,where predicate: (V) throws -> Bool) rethrows -> [V] {
         var results: [V] = []
         try traverse(order: order) { value in
@@ -81,7 +81,7 @@ public extension NodeTree {
 }
 
 private extension NodeTree {
-        /// Depth-first traversal with early exit.
+    /// Depth-first traversal with early exit.
     func traverseDepthFirst(_ visit: (V) throws -> Bool) rethrows -> Bool {
         if try !visit(value) { return false }
         for child in children {
@@ -92,7 +92,7 @@ private extension NodeTree {
         return true
     }
     
-        /// Breadth-first traversal with early exit.
+    /// Breadth-first traversal with early exit.
     func traverseBreadthFirst(_ visit: (V) throws -> Bool) rethrows -> Bool {
         var queue: Deque<NodeTree<V>> = [self]
         
@@ -107,7 +107,7 @@ private extension NodeTree {
     }
 }
 
-    // MARK: - Collection
+// MARK: - Collection
 public extension NodeTree {
     var startIndex: Int { children.startIndex }
     var endIndex: Int { children.endIndex }
@@ -153,7 +153,7 @@ public extension NodeTree {
     }
 }
 
-    // MARK: - Identifiable
+// MARK: - Identifiable
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension NodeTree: Identifiable where V: Identifiable {
     public var id: V.ID { value.id }
