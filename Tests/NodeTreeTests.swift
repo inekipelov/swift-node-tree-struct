@@ -6,15 +6,7 @@ import XCTest
 @testable import NodeTreeStruct
 
 final class NodeTreeTests: XCTestCase {
-    
-    // MARK: - Test Data Structures
-    
-    struct TestPerson: Codable, Equatable, Hashable, Identifiable {
-        let id: String
-        let name: String
-        var age: Int
-    }
-    
+
     // MARK: - Initialization Tests
     
     func testInitWithValueAndNodes() {
@@ -540,17 +532,6 @@ final class NodeTreeTests: XCTestCase {
     }
     
     func testMapKeyPathWithComplexStruct() {
-        struct Address {
-            let street: String
-            let city: String
-        }
-        
-        struct Employee {
-            let name: String
-            let address: Address
-            let salary: Double
-        }
-        
         let ceo = Employee(
             name: "CEO",
             address: Address(street: "Main St", city: "New York"),
@@ -585,7 +566,42 @@ final class NodeTreeTests: XCTestCase {
         XCTAssertEqual(salaryTree[0].value, 80000)
         XCTAssertEqual(salaryTree[0][0].value, 75000)
     }
-    
+
+    func testFlatMap() {
+        let tree = NodeTree(value: 1, children: [2, 3, 4])
+        let flatMappedValues = tree.flatMap { $0 * 2 }
+        XCTAssertEqual(flatMappedValues, [2, 4, 6, 8])
+    }
+
+    func testFlatMapWithKeyPath() {
+        let ceo = Employee(
+            name: "CEO",
+            address: Address(street: "Main St", city: "New York"),
+            salary: 100000
+        )
+        let manager = Employee(
+            name: "Manager",
+            address: Address(street: "Oak Ave", city: "Boston"),
+            salary: 80000
+        )
+        let developer = Employee(
+            name: "Developer",
+            address: Address(street: "Pine Rd", city: "Austin"),
+            salary: 75000
+        )
+
+        let orgChart = NodeTree(value: ceo, nodes: [
+            NodeTree(value: manager, nodes: [
+                NodeTree(value: developer)
+            ])
+        ])
+        let flatMappedCities = orgChart.flatMap(\.address.city)
+        XCTAssertEqual(flatMappedCities, ["New York", "Boston", "Austin"])
+        let flatMappedSalaries = orgChart.flatMap(\.salary)
+        XCTAssertEqual(flatMappedSalaries, [100000, 80000, 75000])
+    }
+
+
     // MARK: - Helper Methods
     
     private func createTestTree() -> NodeTree<Int> {

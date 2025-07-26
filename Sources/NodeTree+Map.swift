@@ -14,4 +14,21 @@ public extension NodeTree {
         let newNodes = self.children.map { $0.map(keyPath) }
         return NodeTree<U>(value: newValue, nodes: newNodes)
     }
+
+    func flatMap<U>(order: TraversalOrder = .depthFirst, _ transform: (V) throws -> U) rethrows -> [U] {
+        var results: [U] = []
+        try traverse(order: order) { value in
+            try results.append(transform(value))
+            return true
+        }
+        return results
+    }
+    func flatMap<U>(order: TraversalOrder = .depthFirst, _ keyPath: KeyPath<V, U>) -> [U] {
+        var results: [U] = []
+        traverse(order: order) { value in
+            results.append(value[keyPath: keyPath])
+            return true
+        }
+        return results
+    }
 }
