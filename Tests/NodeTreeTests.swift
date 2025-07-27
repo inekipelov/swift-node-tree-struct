@@ -56,7 +56,15 @@ final class NodeTreeTests: XCTestCase {
         XCTAssertEqual(tree.age, 31)
         XCTAssertEqual(tree.value.age, 31)
     }
-    
+
+    func testIfLeaf() {
+        let leaf = NodeTree(value: 1)
+        let nonLeaf = NodeTree(value: 2, children: [3])
+        
+        XCTAssertTrue(leaf.isLeaf)
+        XCTAssertFalse(nonLeaf.isLeaf)
+    }
+
     // MARK: - Traversal Tests
     
     func testDepthFirstTraversal() {

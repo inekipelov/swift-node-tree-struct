@@ -34,6 +34,8 @@ public struct NodeTree<V> {
         get { self.value[keyPath: keyPath] }
         set { self.value[keyPath: keyPath] = newValue }
     }
+
+    public var isLeaf: Bool { self.children.isEmpty }
 }
 
 // MARK: - Traversal
