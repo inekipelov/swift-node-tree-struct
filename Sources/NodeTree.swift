@@ -13,7 +13,7 @@ public struct NodeTree<V> {
     public typealias Index = Int
     
     public var value: V
-    public private(set) var children: [NodeTree<V>] = []
+    public var children: [NodeTree<V>] = []
     
     public init(value: V, nodes children: [NodeTree<V>]) {
         self.value = value
@@ -24,7 +24,6 @@ public struct NodeTree<V> {
         self.value = value
         self.children = children.map { NodeTree(value: $0) }
     }
-    
     
     // MARK: - Dynamic Member Lookup
     public subscript<T>(dynamicMember keyPath: KeyPath<V, T>) -> T {
